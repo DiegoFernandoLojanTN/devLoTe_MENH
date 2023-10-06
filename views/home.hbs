@@ -1,22 +1,28 @@
 <main class="lista-vacantes">
-    <h2>Lista de Vacantes</h2>
+  <h2>Lista de Vacantes</h2>
 
-    <div class="vacante">
+  {{#if vacantes.length}}
+    {{#each vacantes}}
+      <div class="vacante">
         <div class="caja">
-            <h3>Facebook</h3>
-            <p class="puesto">Django Developer</p>
-        </div>
-        <div class="caja">
-            <p class="etiqueta">Ubucación</p>
-            <p class="nombre">Remoto</p>
+          <h3>{{empresa}}</h3>
+          <p class="puesto">{{titulo}}</p>
         </div>
         <div class="caja">
-            <p class="etiqueta">Contrato</p>
-            <p class="nombre contrato">Tiempo Completo</p>
+          <p class="etiqueta">Ubicación</p>
+          <p class="nombre">{{ubicacion}}</p>
         </div>
-        <div class="caja central-vertical">
-            <a href="#" class="btn btn-verde">Más Info</a>
+        <div class="caja">
+          <p class="etiqueta">Contrato</p>
+          <p class="nombre contrato">{{contrato}}</p>
         </div>
-
-    </div>
+        <div class="caja centrar-vertical">
+          <a href="/vacantes/{{url}}" class="btn btn-verde">Más Info</a>
+        </div>
+      </div>
+      <!--.vacante-->
+    {{/each}}
+  {{else}}
+    <p>No hay Vacantes</p>
+  {{/if}}
 </main>

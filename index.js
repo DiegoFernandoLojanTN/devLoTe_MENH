@@ -10,9 +10,16 @@
     const session = require('express-session'); 
     const MongoStore = require('connect-mongo')(session);
 
+
+    const bodyParser = require('body-parser');
+
     require('dotenv').config({ path: 'variables.env' });
 
     const app = express();
+
+    app.use(bodyParser.json());
+
+    app.use(bodyParser.urlencoded({extended: true}));
 
     // Habilitando Handlebars como motor de plantillas
     app.engine('hbs', engine({
@@ -20,6 +27,9 @@
         extname: '.hbs',
         layoutsDir: path.join(app.get('views'), 'layouts'),
         defaultLayout: 'layout',
+
+        helpers: require('./helpers/handlebars')
+
     }));
 
     app.set('view engine', 'hbs'); // Configurando Handlebars como el motor de plantillas
