@@ -71,6 +71,8 @@ exports.formEditarPerfil = async (req, res) => {
   res.render("editar-perfil", {
     nombrePagina: "Edita tus Datos en devLoTe",
     usuario: usuario,
+    cerrarSesion: true,
+    nombre: req.user.nombre,
   });
 };
 
