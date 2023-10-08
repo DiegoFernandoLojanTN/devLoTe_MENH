@@ -9,26 +9,62 @@ module.exports = () => {
   router.get("/", homeController.mostrarTrabajos);
 
   //crear vacantes
-  router.get("/vacantes/nueva", authController.verificarUsuario, vacantesController.formularioNuevaVacante);
-  router.post("/vacantes/nueva", authController.verificarUsuario, vacantesController.agregarVacante);
+  router.get(
+    "/vacantes/nueva",
+    authController.verificarUsuario,
+    vacantesController.formularioNuevaVacante
+  );
+  router.post(
+    "/vacantes/nueva",
+    authController.verificarUsuario,
+    vacantesController.agregarVacante
+  );
 
   //mostrar vacantes
   router.get("/vacantes/:url", vacantesController.mostrarVacante);
 
   // Editar Vacante
-  router.get("/vacantes/editar/:url", authController.verificarUsuario, vacantesController.formEditarVacante);
-  router.post("/vacantes/editar/:url", authController.verificarUsuario, vacantesController.editarVacante);
+  router.get(
+    "/vacantes/editar/:url",
+    authController.verificarUsuario,
+    vacantesController.formEditarVacante
+  );
+  router.post(
+    "/vacantes/editar/:url",
+    authController.verificarUsuario,
+    vacantesController.editarVacante
+  );
 
   //Crear cuentas
-  router.get('/crear-cuenta', usuariosController.formCrearCuenta);
-  router.post('/crear-cuenta', usuariosController.validarRegistro ,usuariosController.crearUsuario);
+  router.get("/crear-cuenta", usuariosController.formCrearCuenta);
+  router.post(
+    "/crear-cuenta",
+    usuariosController.validarRegistro,
+    usuariosController.crearUsuario
+  );
 
   //Autenticar usuarios
-  router.get('/iniciar-sesion', usuariosController.formIniciarSesión);
-  router.post('/iniciar-sesion', authController.autenticarUsuario);
+  router.get("/iniciar-sesion", usuariosController.formIniciarSesión);
+  router.post("/iniciar-sesion", authController.autenticarUsuario);
 
   //Panel de administracino
-  router.get('/administracion', authController.verificarUsuario, authController.mostrarPanel);
+  router.get(
+    "/administracion",
+    authController.verificarUsuario,
+    authController.mostrarPanel
+  );
+
+  //Editar Perfil
+  router.get(
+    "/editar-perfil",
+    authController.verificarUsuario,
+    usuariosController.formEditarPerfil
+  );
+  router.post(
+    "/editar-perfil",
+    authController.verificarUsuario,
+    usuariosController.editarPerfil
+  );
 
   return router;
 };
