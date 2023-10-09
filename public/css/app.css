@@ -515,3 +515,7 @@ p.candidatos {
     color: white;
     font-size: 1.8rem;
 }
+
+#swal2-html-container {
+    font-size: 2.1em; /* Tamaño de la letra, puedes ajustarlo según tus necesidades */
+}
