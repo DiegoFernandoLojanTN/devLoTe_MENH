@@ -1,5 +1,44 @@
 const mongoose = require("mongoose");
 const Usuarios = mongoose.model("Usuarios");
+const multer = require("multer");
+const shortid = require("shortid");
+
+exports.subirImagen = (req, res, next) => {
+  upload(req, res, function (error) {
+    if (error instanceof multer.MulterError) {
+      req.flash("error", "Error al subir la imagen");
+      return res.redirect("/editar-perfil");
+    } else if (error) {
+      req.flash("error", "Ocurrió un error al subir la imagen");
+      return res.redirect("/editar-perfil");
+    }
+    // Si no hay errores, continuar con el siguiente middleware o controlador
+    next();
+  });
+};
+
+//Opciones del multer
+const configuracionMulter = {
+  storage: (fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, __dirname + "../../public/uploads/perfiles");
+    },
+    filename: (req, file, cb) => {
+      const extension = file.mimetype.split("/")[1];
+      cb(null, `${shortid.generate()}.${extension}`);
+    },
+  })),
+  fileFilter(req, file, cb) {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  },
+  limits: { fileSize: 5000000 }, // 5 MB en bytes (5 * 1024 * 1024 bytes)
+};
+
+const upload = multer(configuracionMulter).single("imagen");
 
 exports.formCrearCuenta = (req, res) => {
   res.render("crear-cuenta", {
@@ -78,36 +117,27 @@ exports.formEditarPerfil = async (req, res) => {
 
 //Guardar cambios en editar perfil
 exports.editarPerfil = async (req, res) => {
-  const { nombre, email, password } = req.body;
-  console.log(req.body);
-  // Validar el campo nombre
-  if (!nombre || nombre.trim() === "") {
-    req.flash("error", "El campo nombre es obligatorio.");
-    return res.redirect("/administracion");
-  }
-
   try {
     const usuario = await Usuarios.findById(req.user._id);
 
-    // Actualizar los campos del usuario
-    usuario.nombre = nombre;
-    usuario.email = email;
-
-    // Si se proporciona una nueva contraseña, actualizarla
-    if (password) {
-      usuario.password = password;
+    usuario.nombre = req.body.nombre;
+    usuario.email = req.body.email;
+    if (req.body.password) {
+      usuario.password = req.body.password;
     }
 
-    // Guardar los cambios en la base de datos
+    if (req.file) {
+      usuario.imagen = req.file.filename;
+    }
+
     await usuario.save();
 
     req.flash("correcto", "Cambios Guardados Correctamente");
-    res.redirect("/administracion");
+    return res.redirect("/administracion");
   } catch (error) {
-    // Manejar errores aquí
     console.error(error);
-    req.flash("error", "Hubo un error al guardar los cambios.");
-    res.redirect("/administracion");
+    req.flash("error", "Ocurrió un error al guardar los cambios.");
+    return res.redirect("/editar-perfil");
   }
 };
 
